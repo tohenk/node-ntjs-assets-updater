@@ -326,7 +326,7 @@ class App {
             // save CDN
             if (fs.existsSync(cdnFile)) {
                 const cdn = {};
-                Object.keys(this.cdn).sort().forEach(pkg => {
+                Object.keys(this.cdn).sort((a, b) => a.localeCompare(b)).forEach(pkg => {
                     cdn[pkg] = this.cdn[pkg];
                 });
                 fs.writeFileSync(cdnFile, JSON.stringify(cdn, null, 2));
