@@ -201,6 +201,11 @@ class App {
      */
     async run(dest) {
         if (this.package.assets) {
+            // load CDN if exist
+            const cdnFile = path.join(dest, 'cdn.json');
+            if (fs.existsSync(cdnFile)) {
+                this.cdn = JSON.parse(fs.readFileSync(cdnFile));
+            }
             const assets = Object.keys(this.package.assets);
             for (const asset of assets) {
                 const metadata = this.package.assets[asset];
@@ -260,6 +265,10 @@ class App {
                                 }});
                             }
                         }
+                        // update CDN
+                        if (this.cdn && this.cdn[asset]) {
+                            this.cdn[asset].version = version;
+                        }
                     }
                     catch (err) {
                         console.error(err);
@@ -267,6 +276,15 @@ class App {
                 } else {
                     console.log(`- ${asset}`);
                 }
+            }
+            // save CDN
+            if (fs.existsSync(cdnFile)) {
+                const cdn = {};
+                Object.keys(this.cdn).sort().forEach(pkg => {
+                    cdn[pkg] = this.cdn[pkg];
+                });
+                fs.writeFileSync(cdnFile, JSON.stringify(cdn, null, 2));
+                console.log(`+ cdn.json updated`);
             }
         }
     }
