@@ -1,0 +1,149 @@
+{
+  "name": "ntjs-assets-updater",
+  "version": "1.0.0",
+  "description": "NTJS web assets updater",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@eonasdan/tempus-dominus": "^6.7.19",
+    "@popperjs/core": "^2.11.8",
+    "bignumber.js": "^9.1.2",
+    "blueimp-canvastoblob": "^2.1.0",
+    "blueimp-file-upload": "^10.32.0",
+    "blueimp-gallery": "^3.4.0",
+    "blueimp-load-image": "^5.16.0",
+    "blueimp-tmpl": "^3.20.0",
+    "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
+    "bootstrap-select": "^1.13.18",
+    "bootstrap-star-rating": "^4.1.2",
+    "bootswatch": "^5.3.2",
+    "cropperjs": "^1.6.1",
+    "datatables.net": "^1.13.7",
+    "datatables.net-bs5": "^1.13.7",
+    "datatables.net-dt": "^1.13.7",
+    "datatables.net-plugins": "^1.13.6",
+    "fomantic-ui": "^2.9.3",
+    "highcharts": "^11.2.0",
+    "interactjs": "^1.10.20",
+    "jqGrid": "^5.8.4",
+    "jquery": "^3.7.1",
+    "jquery-hotkeys": "^0.2.2",
+    "jquery-numberformatter": "^1.2.4",
+    "jquery.spinner": "^0.2.1",
+    "js-cookie": "^3.0.5",
+    "jshashtable": "^0.1.0",
+    "jstree": "^3.3.16",
+    "leaflet": "^1.9.4",
+    "moment": "^2.29.4",
+    "mousetrap": "^1.6.5",
+    "numeral": "^2.0.6",
+    "pdfjs-dist": "^4.0.189",
+    "socket.io-client": "^4.7.2",
+    "strophe.js": "^1.6.2",
+    "tinymce": "^6.7.2",
+    "typeahead.js": "^0.11.1"
+  },
+  "cdn": {
+    "jsdelivr": "https://cdn.jsdelivr.net/npm/<PKG>@<VER>/<NAME>"
+  },
+  "assets": {
+    "bignumber.js": {
+      "cdn": "jsdelivr",
+      "source": ["bignumber.js", "bignumber.min.js"]
+    },
+    "bootstrap": {},
+    "bootstrap-datetimepicker": {
+      "name": "@eonasdan/tempus-dominus"
+    },
+    "bootstrap-icons": {
+      "source": ["."],
+      "ignores": ["package.json"]
+    },
+    "bootstrap-select": {},
+    "bootstrap-star-rating": {
+      "source": ["css", "img", "js", "themes"]
+    },
+    "bootstrap-typeahead": {},
+    "bootswatch": {},
+    "ckeditor": {},
+    "cropper": {
+      "name": "cropperjs"
+    },
+    "DataTables": {},
+    "fontawesome": {},
+    "Gallery": {
+      "name": "blueimp-gallery",
+      "source": ["LICENSE.txt", "css", "img", "js"]
+    },
+    "google-fonts": {},
+    "highcharts": {
+      "source": ["."],
+      "ignores": ["bower.json", "package.json", "*.ts"]
+    },
+    "hotkeys": {},
+    "interact": {
+      "name": "interactjs"
+    },
+    "JavaScript-Canvas-to-Blob": {
+      "name": "blueimp-canvas-to-blob",
+      "source": ["LICENSE.txt", "js"]
+    },
+    "JavaScript-Load-Image": {
+      "name": "blueimp-load-image",
+      "source": ["LICENSE.txt", "js"]
+    },
+    "JavaScript-Templates": {
+      "name": "blueimp-tmpl",
+      "source": ["LICENSE.txt", "js"]
+    },
+    "jqGrid": {
+      "source": ["css", "js", "plugins"]
+    },
+    "jquery": {},
+    "jQuery-File-Upload": {
+      "name": "blueimp-canvas-to-blob",
+      "source": ["LICENSE.txt", "css", "img", "js"]
+    },
+    "jquery-numberformatter": {
+      "source": {"src": ""}
+    },
+    "jquery.spinner": {},
+    "js-cookie": {},
+    "jshashtable": {
+      "source": ["jshashtable.js"]
+    },
+    "jstree": {},
+    "keyboard": {},
+    "leaflet": {},
+    "moment": {},
+    "mousetrap": {
+      "source": ["."],
+      "ignores": ["tests", "Gruntfile.js", "mousetrap.sublime-project", "package.json"]
+    },
+    "numeral.js": {},
+    "pdfjs": {},
+    "popper.js": {
+      "name": "@popperjs/core"
+    },
+    "sceditor": {},
+    "semantic-ui": {
+      "name": "fomantic-ui"
+    },
+    "socket.io": {
+      "name": "socket.io-client"
+    },
+    "strophe": {
+      "name": "strophe.js"
+    },
+    "tinymce": {
+      "source": ["."],
+      "ignores": ["bower.json", "composer.json", "package.json"]
+    },
+    "typeahead.js": {}
+  }
+}
