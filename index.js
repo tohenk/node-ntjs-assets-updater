@@ -104,6 +104,29 @@ class App {
     }
 
     /**
+     * Get all ignored files.
+     *
+     * @param {string[]} ignores Ignored files
+     * @returns {string[]}
+     */
+    getIgnored(...ignores) {
+        const result = [...this.ignores];
+        const f = ignores => {
+            if (Array.isArray(ignores)) {
+                ignores.forEach(ignore => {
+                    if (Array.isArray(ignore)) {
+                        f(ignore);
+                    } else if (ignore && result.indexOf(ignore) < 0) {
+                        result.push(ignore);
+                    }
+                });
+            }
+        }
+        f(ignores);
+        return result;
+    }
+
+    /**
      * Download a file from url.
      *
      * @param {string} url File url
@@ -197,6 +220,95 @@ class App {
     }
 
     /**
+     * Update assets.
+     *
+     * @param {object} packages Packages metadata
+     * @param {string} dir Destination directory
+     * @param {string[]} ignores Ignores file
+     */
+    async updateAsset(packages, dir, ignores = []) {
+        const assets = Object.keys(packages);
+        for (const asset of assets) {
+            const metadata = packages[asset];
+            if (metadata.packages) {
+                await this.updateAsset(metadata.packages, path.join(dir, asset), metadata.ignores);
+            } else {
+                let prepared = false
+                // allow combine multiple package
+                const items = Array.isArray(metadata) ? metadata : [metadata];
+                for (const mdata of items) {
+                    const pkg = mdata.name ? mdata.name : asset;
+                    const version = this.getVersion(pkg);
+                    if (version) {
+                        console.log(`+ ${asset}: ${version}`);
+                        try {
+                            let pkgDir = path.join(__dirname, 'node_modules', pkg);
+                            const destDir = path.join(dir, mdata.dest ? mdata.dest : asset);
+                            // sources {"src": "dest"}
+                            let sources = mdata.source ? mdata.source : {dist: ''};
+                            // sources ["src"] => {"src": "src"}
+                            if (Array.isArray(sources)) {
+                                const _sources = {}
+                                sources.forEach(src => {
+                                    _sources[src] = src;
+                                })
+                                sources = _sources;
+                            }
+                            // download if needed
+                            if (mdata.cdn) {
+                                if (!this.package.cdn[mdata.cdn]) {
+                                    console.log(`  cdn not defined ${mdata.cdn}!`);
+                                    continue;
+                                }
+                                pkgDir = path.join(__dirname, '.files');
+                                this.prepDir(pkgDir);
+                                for (const src in sources) {
+                                    const url = this.package.cdn[mdata.cdn]
+                                        .replace(/<PKG>/g, pkg)
+                                        .replace(/<VER>/g, version)
+                                        .replace(/<NAME>/g, src);
+                                    console.log(`  download ${url}...`);
+                                    const content = await this.downloadFile(url);
+                                    if (content) {
+                                        const destFile = path.join(pkgDir, sources[src]);
+                                        fs.writeFileSync(destFile, content);
+                                    }
+                                }
+                            }
+                            // ignores
+                            const ignored = this.getIgnored(ignores, metadata.ignores);
+                            // copy files
+                            for (const src in sources) {
+                                if (!prepared) {
+                                    prepared = true;
+                                    this.prepDir(destDir);
+                                }
+                                const srcFile = path.join(pkgDir, src);
+                                const destFile = path.join(destDir, sources[src]);
+                                if (fs.existsSync(srcFile)) {
+                                    console.log(`  copy ${pkg}/${src} => ${destFile}`);
+                                    fs.cpSync(srcFile, destFile, {recursive: true, filter: (src, dest) => {
+                                        return this.isIgnored(path.basename(src), ignored) ? false : true;
+                                    }});
+                                }
+                            }
+                            // update CDN
+                            if (this.cdn && this.cdn[asset]) {
+                                this.cdn[asset].version = version;
+                            }
+                        }
+                        catch (err) {
+                            console.error(err);
+                        }
+                    } else {
+                        console.log(`- ${asset}`);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Run assets updater.
      *
      * @param {string} dest Path to destination folder
@@ -208,80 +320,7 @@ class App {
             if (fs.existsSync(cdnFile)) {
                 this.cdn = JSON.parse(fs.readFileSync(cdnFile));
             }
-            const assets = Object.keys(this.package.assets);
-            for (const asset of assets) {
-                const metadata = this.package.assets[asset];
-                const pkg = metadata.name ? metadata.name : asset;
-                const version = this.getVersion(pkg);
-                if (version) {
-                    console.log(`+ ${asset}: ${version}`);
-                    try {
-                        let pkgDir = path.join(__dirname, 'node_modules', pkg);
-                        const destDir = path.join(dest, asset);
-                        // sources {"src": "dest"}
-                        let sources = metadata.source ? metadata.source : {dist: ''};
-                        // sources ["src"] => {"src": "src"}
-                        if (Array.isArray(sources)) {
-                            const _sources = {}
-                            sources.forEach(src => {
-                                _sources[src] = src;
-                            })
-                            sources = _sources;
-                        }
-                        // download if needed
-                        if (metadata.cdn) {
-                            if (!this.package.cdn[metadata.cdn]) {
-                                console.log(`  cdn not defined ${metadata.cdn}!`);
-                                continue;
-                            }
-                            pkgDir = path.join(__dirname, '.files');
-                            this.prepDir(pkgDir);
-                            for (const src in sources) {
-                                const url = this.package.cdn[metadata.cdn]
-                                    .replace(/<PKG>/g, pkg)
-                                    .replace(/<VER>/g, version)
-                                    .replace(/<NAME>/g, src);
-                                console.log(`  download ${url}...`);
-                                const content = await this.downloadFile(url);
-                                if (content) {
-                                    const destFile = path.join(pkgDir, sources[src]);
-                                    fs.writeFileSync(destFile, content);
-                                }
-                            }
-                        }
-                        // ignores
-                        const ignores = this.ignores;
-                        if (metadata.ignores) {
-                            ignores.push(...metadata.ignores);
-                        }
-                        // copy files
-                        let prepared = false
-                        for (const src in sources) {
-                            if (!prepared) {
-                                prepared = true;
-                                this.prepDir(destDir);
-                            }
-                            const srcFile = path.join(pkgDir, src);
-                            const destFile = path.join(destDir, sources[src]);
-                            if (fs.existsSync(srcFile)) {
-                                console.log(`  copy ${pkg}/${src} => ${destFile}`);
-                                fs.cpSync(srcFile, destFile, {recursive: true, filter: (src, dest) => {
-                                    return this.isIgnored(path.basename(src), ignores) ? false : true;
-                                }});
-                            }
-                        }
-                        // update CDN
-                        if (this.cdn && this.cdn[asset]) {
-                            this.cdn[asset].version = version;
-                        }
-                    }
-                    catch (err) {
-                        console.error(err);
-                    }
-                } else {
-                    console.log(`- ${asset}`);
-                }
-            }
+            await this.updateAsset(this.package.assets, dest);
             // save CDN
             if (fs.existsSync(cdnFile)) {
                 const cdn = {};
