@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Toha <tohenk@yahoo.com>",
+  "license": "MIT",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^40.0.0",
     "@eonasdan/tempus-dominus": "^6.7.19",
