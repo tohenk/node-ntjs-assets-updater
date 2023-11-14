@@ -27,6 +27,8 @@ const path = require('path');
 
 class App {
 
+    ignores = ['bower.json', 'composer.json', 'package.json']
+
     constructor() {
         this.package = this.loadJson('package.json');
         this.installed = this.loadJson('package-lock.json');
@@ -248,7 +250,10 @@ class App {
                             }
                         }
                         // ignores
-                        const ignores = metadata.ignores ? metadata.ignores : [];
+                        const ignores = this.ignores;
+                        if (metadata.ignores) {
+                            ignores.push(...metadata.ignores);
+                        }
                         // copy files
                         let prepared = false
                         for (const src in sources) {
