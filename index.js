@@ -289,7 +289,7 @@ class App {
                     cdn[pkg] = this.cdn[pkg];
                 });
                 fs.writeFileSync(cdnFile, JSON.stringify(cdn, null, 2));
-                console.log(`+ cdn.json updated`);
+                console.log(`+ ${path.basename(cdnFile)} updated`);
             }
         }
     }
