@@ -1,0 +1,71 @@
+name: Update assets
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 0 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        path: updater
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        repository: tohenk/ntjs-web-assets
+        token: ${{ secrets.TOKEN }}
+        path: repository
+        fetch-depth: 0
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        cache: 'npm'
+        cache-dependency-path: 'updater/package-lock.json'
+    - name: Install dependencies
+      run: cd updater && npm install
+    - name: Update assets
+      run: cd updater && node index.js ../repository
+    - name: Commit assets changes
+      run: |
+        cd repository
+        CD=$(pwd)
+
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+        set +e
+
+        CHANGES=""
+        for DIR in `ls`; do
+          if [ -d "${CD}/${DIR}" ]; then
+            cd "${CD}/${DIR}"
+            CHANGED=$(git diff .)
+            if [ -n "${CHANGED}" ]; then
+              VER=$(awk "/\"${DIR}\": {/,/\"version\": \"*\"/ { if (\$2 != \"{\") print \$2 }" ${CD}/cdn.json | egrep -o "([0-9]{1,}\.)+[0-9]{1,}")
+              if [ -n "${VER}" ]; then
+                echo "> ${DIR} (${VER})"
+                if [ -n "${CHANGES}" ]; then
+                  CHANGES+="
+        "
+                fi
+                CHANGES+="- ${DIR} (${VER})"
+              fi
+              git add .
+            fi
+          fi
+        done
+        if [ -n "${CHANGES}" ]; then
+          echo "Committing assets changes..."
+
+          cd ${CD}
+          if [ -n "$(git diff cdn.json)" ]; then
+            git add cdn.json
+          fi
+          git commit -m "Automatic assets update.
+
+        ${CHANGES}"
+          git push
+        fi

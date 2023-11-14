@@ -181,40 +181,15 @@ class App {
     }
 
     /**
-     * Clean directory.
-     *
-     * @param {string} directory Full path of directory to clean
-     */
-    cleanDir(directory) {
-        const dir = fs.opendirSync(directory);
-        if (dir) {
-            while (true) {
-                const ent = dir.readSync();
-                if (ent) {
-                    const filepath = path.join(ent.path, ent.name);
-                    if (ent.isDirectory()) {
-                        this.cleanDir(filepath);
-                        fs.rmdirSync(filepath);
-                    } else {
-                        fs.rmSync(filepath);
-                    }
-                } else {
-                    break;
-                }
-            }
-            dir.closeSync();
-        }
-    }
-
-    /**
      * Prepare a directory, clean it if it exists or create if none exists.
      *
      * @param {string} directory Full path of directory
      */
     prepDir(directory) {
         if (fs.existsSync(directory)) {
-            this.cleanDir(directory);
-        } else {
+            fs.rmSync(directory, {recursive: true, force: true});
+        }
+        if (!fs.existsSync(directory)) {
             fs.mkdirSync(directory, {recursive: true});
         }
     }
