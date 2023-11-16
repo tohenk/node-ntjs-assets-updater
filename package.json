@@ -92,6 +92,7 @@
     "socket.io-client": "^4.7.2",
     "strophe.js": "^1.6.2",
     "tinymce": "^6.7.3",
+    "tinymce-i18n": "^23.11.6",
     "typeahead.js": "^0.11.1"
   },
   "cdn": {
@@ -470,8 +471,22 @@
       "name": "strophe.js"
     },
     "tinymce": {
-      "source": [
-        "."
+      "packages": {
+        "tinymce": {
+          "dest": ".",
+          "source": [
+            "."
+          ]
+        },
+        "tinymce-i18n": {
+          "dest": "plugins/langs",
+          "source": {
+            "langs6": ""
+          }
+        }
+      },
+      "ignores": [
+        "*.ts"
       ]
     },
     "typeahead.js": {}
