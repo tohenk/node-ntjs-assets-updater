@@ -199,14 +199,21 @@ class App {
      *
      * @param {object} packages Packages metadata
      * @param {string} dir Destination directory
-     * @param {string[]} ignores Ignores file
+     * @param {object} options Options
+     * @param {string[]} [options.updates]
+     * @param {boolean} [options.verbose]
+     * @param {string[]} [options.ignores]
      */
-    async updateAsset(packages, dir, ignores = []) {
+    async updateAsset(packages, dir, options = {}) {
         const assets = Object.keys(packages);
+        const updates = options.updates || [];
         for (const asset of assets) {
+            if (updates.length && updates.indexOf(asset) < 0) {
+                continue;
+            }
             const metadata = packages[asset];
             if (metadata.packages) {
-                await this.updateAsset(metadata.packages, path.join(dir, asset), metadata.ignores);
+                await this.updateAsset(metadata.packages, path.join(dir, asset), Object.assign({}, options, {ignores: metadata.ignores}));
             } else {
                 let prepared = false
                 // allow combine multiple package
@@ -266,7 +273,7 @@ class App {
                                     }
                                 }
                                 // ignores
-                                const ignored = this.getIgnored(ignores, metadata.ignores);
+                                const ignored = this.getIgnored(options.ignores, metadata.ignores);
                                 // copy files
                                 for (const src in sources) {
                                     if (!prepared) {
@@ -278,7 +285,11 @@ class App {
                                     if (fs.existsSync(srcFile)) {
                                         console.log(`  copy ${pkg}/${src} => ${destFile}`);
                                         fs.cpSync(srcFile, destFile, {recursive: true, filter: (src, dest) => {
-                                            return this.isIgnored(path.basename(src), ignored) ? false : true;
+                                            const accepted = !this.isIgnored(path.basename(src), ignored);
+                                            if (options.v || options.verbose) {
+                                                console.log(`  ${accepted ? 'ok' : 'skip'} ${src}`);
+                                            }
+                                            return accepted;
                                         }});
                                     }
                                 }
@@ -312,33 +323,72 @@ class App {
     /**
      * Run assets updater.
      *
-     * @param {string} dest Path to destination folder
+     * @param {string[]} args Arguments
+     * @param {object} options Options
+     * @param {boolean} [options.verbose]
      */
-    async run(dest) {
-        if (this.package.assets) {
+    async run(args, options = {}) {
+        const dest = args.shift();
+        if (fs.existsSync(dest) && this.package.assets) {
             // load CDN if exist
             const cdnFile = path.join(dest, 'cdn.json');
             if (fs.existsSync(cdnFile)) {
                 this.cdn = JSON.parse(fs.readFileSync(cdnFile));
             }
-            await this.updateAsset(this.package.assets, dest);
+            await this.updateAsset(this.package.assets, dest, Object.assign({}, options, {updates: args}));
             // save CDN
             if (fs.existsSync(cdnFile)) {
                 const cdn = {};
                 Object.keys(this.cdn).sort((a, b) => a.localeCompare(b)).forEach(pkg => {
                     cdn[pkg] = this.cdn[pkg];
                 });
-                fs.writeFileSync(cdnFile, JSON.stringify(cdn, null, 2));
-                console.log(`+ ${path.basename(cdnFile)} updated`);
+                const oldCdn = JSON.stringify(this.cdn, null, 2);
+                const newCdn = JSON.stringify(cdn, null, 2);
+                if (oldCdn !== newCdn) {
+                    fs.writeFileSync(cdnFile, JSON.stringify(cdn, null, 2));
+                    console.log(`+ ${path.basename(cdnFile)} updated`);
+                }
             }
         }
     }
 }
 
+function usage() {
+    console.log(`Usage: node ${path.basename(process.argv[1])} [options] DIR [PKG...]
+
+  DIR              The asset directory to update, if it contains a cdn.json then
+                   the version will also be updated
+  PKG              The package to updates, e.g. pdfjs
+
+Options:
+  -v, --verbose    Be verbose
+`);
+}
+
 if (process.argv.length > 2) {
-    if (fs.existsSync(process.argv[2])) {
-        new App().run(process.argv[2]);
+    const options = {};
+    const args = process.argv.slice(2);
+    while (true) {
+        if (!args.length) {
+            break;
+        }
+        if (args[0].startsWith('-') || args[0].startsWith('--')) {
+            let arg = args.shift();
+            arg = arg.substr(arg.startsWith('--') ? 2 : 1);
+            if (arg.indexOf('=') > 0) {
+                options[arg.substr(0, arg.indexOf('='))] = arg.substr(arg.indexOf('=') + 1);
+            } else {
+                options[arg] = true;
+            }
+        } else {
+            break;
+        }
+    }
+    if (args.length) {
+        new App().run(args, options);
+    } else {
+        usage();
     }
 } else {
-    console.log(`Usage: node ${path.basename(process.argv[1])} DIR`);
+    usage();
 }
