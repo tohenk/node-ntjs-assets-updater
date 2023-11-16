@@ -83,6 +83,7 @@
     "js-cookie": "^3.0.5",
     "jshashtable": "^0.1.0",
     "jstree": "^3.3.16",
+    "jszip": "^3.10.1",
     "leaflet": "^1.9.4",
     "moment": "^2.29.4",
     "mousetrap": "^1.6.5",
@@ -96,7 +97,8 @@
     "typeahead.js": "^0.11.1"
   },
   "cdn": {
-    "jsdelivr": "https://cdn.jsdelivr.net/npm/<PKG>@<VER>/<NAME>"
+    "jsdelivr": "https://cdn.jsdelivr.net/npm/<PKG>@<VER>/<NAME>",
+    "pdfjs-github-release": "https://github.com/mozilla/pdf.js/releases/download/v<VER>/pdfjs-<VER>-dist.zip"
   },
   "assets": {
     "bignumber.js": {
@@ -449,6 +451,7 @@
     },
     "pdfjs": {
       "name": "pdfjs-dist",
+      "cdn": "pdfjs-github-release",
       "source": [
         "."
       ]

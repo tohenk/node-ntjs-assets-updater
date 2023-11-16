@@ -24,6 +24,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const JSZip = require('jszip');
 
 class App {
 
@@ -141,18 +142,17 @@ class App {
                 const http = require('https:' == parsedUrl.protocol ? 'https' : 'http');
                 const req = http.get(url, res => {
                     code = res.statusCode;
-                    res.setEncoding('utf8');
                     res.on('data', chunk => {
                         if (buff) {
-                            buff += chunk;
+                            buff = Buffer.concat([buff, chunk]);
                         } else {
                             buff = chunk;
                         }
                     });
                     res.on('end', () => {
                         if (code === 301 || code === 302) {
-                            if (res.headers.Location) {
-                                url = res.headers.Location;
+                            if (res.headers.location) {
+                                url = res.headers.location;
                             } else {
                                 reject('No redirect to to follow!');
                             }
@@ -247,8 +247,21 @@ class App {
                                         console.log(`  download ${url}...`);
                                         const content = await this.downloadFile(url);
                                         if (content) {
-                                            const destFile = path.join(pkgDir, sources[src]);
-                                            fs.writeFileSync(destFile, content);
+                                            if (url.endsWith('.zip')) {
+                                                const zip = await JSZip.loadAsync(content);
+                                                for (const entry of Object.values(zip.files)) {
+                                                    const filepath = path.join(pkgDir, entry.name);
+                                                    if (entry.dir) {
+                                                        fs.mkdirSync(filepath, {recursive: true});
+                                                    } else {
+                                                        const buff = await entry.async('nodebuffer');
+                                                        fs.writeFileSync(filepath, buff);
+                                                    }
+                                                }
+                                            } else {
+                                                const destFile = path.join(pkgDir, sources[src] !== '.' ? sources[src] : path.basename(url));
+                                                fs.writeFileSync(destFile, content);
+                                            }
                                         }
                                     }
                                 }
