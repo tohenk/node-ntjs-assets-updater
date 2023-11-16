@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: cd updater && npm install
     - name: Update assets
-      run: cd updater && node index.js ../repository
+      run: cd updater && node index.js --verbose ../repository
     - name: Commit assets changes
       run: |
         cd repository
