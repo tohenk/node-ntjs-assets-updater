@@ -57,11 +57,12 @@ jobs:
             fi
           fi
         done
-        if [ -n "${CHANGES}" ]; then
+        cd ${CD}
+        CDN_CHANGED=$(git diff cdn.json)
+        if [ -n "${CHANGES}" -o -n "${CDN_CHANGED}" ]; then
           echo "Committing assets changes..."
 
-          cd ${CD}
-          if [ -n "$(git diff cdn.json)" ]; then
+          if [ -n "${CDN_CHANGED}" ]; then
             git add cdn.json
           fi
           git commit -m "Automatic assets update.

@@ -214,12 +214,13 @@ class App {
                 for (const mdata of items) {
                     const pkgs = mdata.name ? (Array.isArray(mdata.name)  ? mdata.name : [mdata.name]) : [asset];
                     for (const pkg of pkgs) {
-                        const version = this.getVersion(pkg);
+                        let version = this.getVersion(pkg);
                         if (version) {
                             console.log(`+ ${asset}: ${version}`);
                             try {
-                                let pkgDir = path.join(__dirname, 'node_modules', pkg);
+                                const moduleDir = path.join(__dirname, 'node_modules', pkg);
                                 const destDir = path.join(dir, mdata.dest ? mdata.dest : asset);
+                                let pkgDir = moduleDir;
                                 // sources {"src": "dest"}
                                 let sources = mdata.source ? mdata.source : {dist: ''};
                                 // sources ["src"] => {"src": "src"}
@@ -270,6 +271,16 @@ class App {
                                 }
                                 // update CDN
                                 if (this.cdn && this.cdn[asset]) {
+                                    // get version from file content
+                                    if (mdata.version && mdata.version.source && mdata.version.pattern) {
+                                        const srcVersion = path.join(moduleDir, mdata.version.source);
+                                        if (fs.existsSync(srcVersion)) {
+                                            const matches = fs.readFileSync(srcVersion).toString().match(mdata.version.pattern);
+                                            if (matches.groups && matches.groups.VERSION) {
+                                                version = matches.groups.VERSION;
+                                            }
+                                        }
+                                    }
                                     this.cdn[asset].version = version;
                                 }
                             }
