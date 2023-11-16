@@ -46,14 +46,17 @@ jobs:
             if [ -n "${CHANGED}" ]; then
               VER=$(awk "/\"${DIR}\": {/,/\"version\": \"*\"/ { if (\$2 != \"{\") print \$2 }" ${CD}/cdn.json | egrep -o "([0-9]{1,}\.)+[0-9]{1,}[A-Za-z0-9\-]{0,}")
               if [ -n "${VER}" ]; then
-                echo "> ${DIR} (${VER})"
-                if [ -n "${CHANGES}" ]; then
-                  CHANGES+="
-        "
-                fi
-                CHANGES+="- ${DIR} (${VER})"
+                MSG="${DIR} (${VER})"
+              else
+                MSG="${DIR}"
               fi
+              echo "> ${MSG}"
               git add .
+              if [ -n "${CHANGES}" ]; then
+                CHANGES+="
+        "
+              fi
+              CHANGES+="- ${MSG}"
             fi
           fi
         done
