@@ -407,7 +407,7 @@
     },
     "jquery": {},
     "jQuery-File-Upload": {
-      "name": "blueimp-canvas-to-blob",
+      "name": "blueimp-file-upload",
       "source": [
         "LICENSE.txt",
         "css",
