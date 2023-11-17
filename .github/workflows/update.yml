@@ -25,9 +25,17 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'updater/package-lock.json'
     - name: Install dependencies
-      run: cd updater && npm install
+      run: cd updater && npm update
     - name: Update assets
-      run: cd updater && node index.js --verbose ../repository
+      run: |
+        cd updater
+        if [ "x${_VERBOSE}" = "xTRUE" -o "x${_VERBOSE}" = "x1" ]; then
+          node index.js --verbose ../repository
+        else
+          node index.js ../repository
+        fi
+      env:
+        _VERBOSE: ${{ vars.UPDATE_VERBOSE }}
     - name: Commit assets changes
       run: |
         cd repository
