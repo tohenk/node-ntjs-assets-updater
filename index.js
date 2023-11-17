@@ -331,21 +331,23 @@ class App {
         const dest = args.shift();
         if (fs.existsSync(dest) && this.package.assets) {
             // load CDN if exist
+            let oldCdn;
             const cdnFile = path.join(dest, 'cdn.json');
             if (fs.existsSync(cdnFile)) {
-                this.cdn = JSON.parse(fs.readFileSync(cdnFile));
+                oldCdn = fs.readFileSync(cdnFile);
+                this.cdn = JSON.parse(oldCdn);
+                console.log(`+ ${path.basename(cdnFile)} loaded`);
             }
             await this.updateAsset(this.package.assets, dest, Object.assign({}, options, {updates: args}));
             // save CDN
-            if (fs.existsSync(cdnFile)) {
+            if (oldCdn) {
                 const cdn = {};
                 Object.keys(this.cdn).sort((a, b) => a.localeCompare(b)).forEach(pkg => {
                     cdn[pkg] = this.cdn[pkg];
                 });
-                const oldCdn = JSON.stringify(this.cdn, null, 2);
                 const newCdn = JSON.stringify(cdn, null, 2);
-                if (oldCdn !== newCdn) {
-                    fs.writeFileSync(cdnFile, JSON.stringify(cdn, null, 2));
+                if (oldCdn != newCdn) {
+                    fs.writeFileSync(cdnFile, newCdn);
                     console.log(`+ ${path.basename(cdnFile)} updated`);
                 }
             }
