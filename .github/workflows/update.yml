@@ -41,12 +41,17 @@ jobs:
         cd repository
         CD=$(pwd)
 
+        set +e
+
         git config user.name github-actions
         git config user.email github-actions@github.com
 
-        set +e
-
+        PKG=0
+        [ "x${_EACH_PACKAGE}" = "xTRUE" -o "x${_EACH_PACKAGE}" = "x1" ] && PKG=1
+        CNT=0
         CHANGES=""
+
+        ### check changes of each package and commit if necessary
         for DIR in `ls`; do
           if [ -d "${CD}/${DIR}" ]; then
             cd "${CD}/${DIR}"
@@ -54,30 +59,46 @@ jobs:
             if [ -n "${CHANGED}" ]; then
               VER=$(awk "/\"${DIR}\": {/,/\"version\": \"*\"/ { if (\$2 != \"{\") print \$2 }" ${CD}/cdn.json | egrep -o "([0-9]{1,}\.)+[0-9]{1,}[A-Za-z0-9\-]{0,}")
               if [ -n "${VER}" ]; then
-                MSG="${DIR} (${VER})"
+                MSG="Update ${DIR} to ${VER}"
               else
-                MSG="${DIR}"
+                MSG="Update ${DIR}"
               fi
-              echo "> ${MSG}"
+              echo "> ${DIR} ${VER}"
               git add .
-              if [ -n "${CHANGES}" ]; then
-                CHANGES+="
+              if [ $PKG -eq 1 ]; then
+                git commit -m "${MSG}."
+              else
+                if [ -n "${CHANGES}" ]; then
+                  CHANGES+="
         "
+                fi
+                CHANGES+="- ${MSG}"
               fi
-              CHANGES+="- ${MSG}"
+              CNT=$((CNT+1))
             fi
           fi
         done
-        cd ${CD}
-        CDN_CHANGED=$(git diff cdn.json)
-        if [ -n "${CHANGES}" -o -n "${CDN_CHANGED}" ]; then
-          echo "Committing assets changes..."
 
-          if [ -n "${CDN_CHANGED}" ]; then
-            git add cdn.json
+        cd ${CD}
+
+        ### check for cdn.json changes
+        if [ -n "$(git diff cdn.json)" ]; then
+          git add cdn.json
+          if [ $PKG -eq 1 ]; then
+            git commit -m "Automatic CDN update."
           fi
-          git commit -m "Automatic assets update.
+          CNT=$((CNT+1))
+        fi
+
+        ### commit changes and push commits
+        if [ $CNT -gt 0 ]; then
+          echo "Pushing changes..."
+          if [ $PKG -eq 0 ]; then
+            git commit -m "Automatic assets update.
 
         ${CHANGES}"
+          fi
           git push
         fi
+      env:
+        _EACH_PACKAGE: ${{ vars.UPDATE_COMMIT_PACKAGE }}
