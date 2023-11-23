@@ -21,7 +21,7 @@
     "blueimp-tmpl": "^3.20.0",
     "bootstrap": "^5.3.2",
     "bootstrap-3-typeahead": "^4.0.2",
-    "bootstrap-icons": "^1.11.1",
+    "bootstrap-icons": "^1.11.2",
     "bootstrap-select-main": "^1.14.0-main",
     "bootstrap-star-rating": "^4.1.2",
     "bootswatch": "^5.3.2",
@@ -93,8 +93,8 @@
     "sceditor": "^3.2.0",
     "socket.io-client": "^4.7.2",
     "strophe.js": "^1.6.2",
-    "tinymce": "^6.7.3",
-    "tinymce-i18n": "^23.11.6",
+    "tinymce": "^6.8.0",
+    "tinymce-i18n": "^23.11.20",
     "typeahead.js": "^0.11.1"
   },
   "cdn": {
