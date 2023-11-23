@@ -382,7 +382,12 @@
         "*.ts"
       ]
     },
-    "hotkeys": {},
+    "hotkeys": {
+      "name": "jquery-hotkeys",
+      "source": [
+        "jquery-hotkeys.js"
+      ]
+    },
     "interact": {
       "name": "interactjs"
     },
