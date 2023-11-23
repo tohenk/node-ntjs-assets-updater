@@ -211,10 +211,10 @@
           "name": "datatables.net-datetime",
           "dest": "Extensions/DateTime",
           "source": {
-            "dist/dataTables.datetime.css": "css/dataTables.datetime.css",
-            "dist/dataTables.datetime.min.css": "css/dataTables.datetime.min.css",
-            "dist/dataTables.datetime.js": "js/dataTables.datetime.js",
-            "dist/dataTables.datetime.min.js": "js/dataTables.datetime.min.js"
+            "dist/dataTables.dateTime.css": "css/dataTables.dateTime.css",
+            "dist/dataTables.dateTime.min.css": "css/dataTables.dateTime.min.css",
+            "dist/dataTables.dateTime.js": "js/dataTables.dateTime.js",
+            "dist/dataTables.dateTime.min.js": "js/dataTables.dateTime.min.js"
           }
         },
         "DataTables-FixedColumns": {
