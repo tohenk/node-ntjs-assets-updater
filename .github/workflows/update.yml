@@ -9,18 +9,18 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: updater
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: tohenk/ntjs-web-assets
         token: ${{ secrets.TOKEN }}
         path: repository
         fetch-depth: 0
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         cache: 'npm'
         cache-dependency-path: 'updater/package-lock.json'
