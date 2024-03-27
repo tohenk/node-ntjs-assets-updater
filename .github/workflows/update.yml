@@ -48,41 +48,54 @@ jobs:
 
         PKG=0
         [ "x${_EACH_PACKAGE}" = "xTRUE" -o "x${_EACH_PACKAGE}" = "x1" ] && PKG=1
+        CDN=$CD/cdn.json
         CNT=0
         CHANGES=""
 
-        # check changes of each package and commit if necessary
-        for DIR in `ls`; do
-          if [ -d "${CD}/${DIR}" ]; then
-            cd "${CD}/${DIR}"
-            CHANGED=$(git diff .)
-            UNTRACKED=$(git status . | grep "Untracked files")
-            if [ -n "${CHANGED}" -o -n "${UNTRACKED}" ]; then
-              VER=$(awk "/\"${DIR}\": {/,/\"version\": \"*\"/ { if (\$2 != \"{\") print \$2 }" ${CD}/cdn.json | egrep -o "([0-9]{1,}\.)+[0-9]{1,}[A-Za-z0-9\-]{0,}")
-              if [ -n "${VER}" ]; then
-                MSG="Update ${DIR} to ${VER}"
-              else
-                MSG="Update ${DIR}"
-              fi
-              echo "> ${DIR} ${VER}"
-              git add .
-              if [ $PKG -eq 1 ]; then
-                git commit -m "${MSG}."
-              else
-                if [ -n "${CHANGES}" ]; then
-                  CHANGES+="
-        "
+        commit_changes() {
+          CDIR=$1
+          PREFIX=$2
+          cd "${CDIR}"
+          for DIR in `ls`; do
+            ASSETDIR=$CDIR/$DIR
+            if [ -d "${ASSETDIR}" ]; then
+              cd "${ASSETDIR}"
+              CHANGED=$(git diff .)
+              UNTRACKED=$(git status . | grep "Untracked files")
+              if [ -n "${CHANGED}" -o -n "${UNTRACKED}" ]; then
+                ASSET=$DIR
+                if [ -n "$PREFIX" ]; then
+                  ASSET="${PREFIX}-${ASSET}"
                 fi
-                CHANGES+="- ${MSG}"
+                VER=$(awk "/\"${ASSET}\": {/,/\"version\": \"*\"/ { if (\$2 != \"{\") print \$2 }" ${CDN} | egrep -o "([0-9]{1,}\.)+[0-9]{1,}[A-Za-z0-9\-]{0,}")
+                if [ -n "${VER}" ]; then
+                  MSG="Update ${ASSET} to ${VER}"
+                else
+                  MSG="Updated ${ASSET}"
+                fi
+                echo "> ${DIR} ${VER}"
+                git add .
+                if [ $PKG -eq 1 ]; then
+                  git commit -m "${MSG}."
+                else
+                  if [ -n "${CHANGES}" ]; then
+                    CHANGES+="
+        "
+                  fi
+                  CHANGES+="- ${MSG}"
+                fi
+                CNT=$((CNT+1))
               fi
-              CNT=$((CNT+1))
             fi
-          fi
-        done
+          done
+        }
 
-        cd ${CD}
+        # check changes of each package and commit if necessary
+        commit_changes $CD/DataTables/Extensions DataTables
+        commit_changes $CD
 
         # check for cdn.json changes
+        cd $CD
         if [ -n "$(git diff cdn.json)" ]; then
           git add cdn.json
           if [ $PKG -eq 1 ]; then
