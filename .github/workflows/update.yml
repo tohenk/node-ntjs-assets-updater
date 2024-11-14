@@ -25,7 +25,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: 'updater/package-lock.json'
     - name: Install dependencies
-      run: cd updater && npm update
+      run: cd updater && node deps.js && ./deps.sh
     - name: Update assets
       run: |
         cd updater
