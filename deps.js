@@ -45,7 +45,9 @@ if (fs.existsSync(package)) {
         fs.writeFileSync(filename, lines.join(eol));
         if (process.platform !== 'win32') {
             fs.chmod(filename, 0o775, err => {
-                console.error(err);
+                if (err) {
+                    console.error(err);
+                }
             });
         }
     }

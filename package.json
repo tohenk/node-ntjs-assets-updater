@@ -502,9 +502,9 @@
           ]
         },
         "tinymce-i18n": {
-          "dest": "plugins/langs",
+          "dest": "plugins/langs7",
           "source": {
-            "langs6": ""
+            "langs7": ""
           }
         }
       },
