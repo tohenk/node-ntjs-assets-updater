@@ -25,58 +25,17 @@
 const fs = require('fs');
 const path = require('path');
 const JSZip = require('jszip');
+const Package = require('./pkg');
 
 class App {
 
     ignores = ['bower.json', 'composer.json', 'package.json']
 
+    /**
+     * Constructor.
+     */
     constructor() {
-        this.package = this.loadJson('package.json');
-        this.installed = this.loadJson('package-lock.json');
-    }
-
-    /**
-     * Load package and parse as JSON.
-     *
-     * @param {string} pkg Package name
-     * @returns {object}
-     */
-    loadJson(pkg) {
-        return JSON.parse(fs.readFileSync(path.join(__dirname, pkg)));
-    }
-
-    /**
-     * Get installed packages.
-     *
-     * @returns {object}
-     */
-    getPackages() {
-        if (!this.packages) {
-            this.packages = {};
-            if (this.installed.packages) {
-                Object.keys(this.installed.packages).forEach(pkg => {
-                    const pkgInfo = this.installed.packages[pkg];
-                    if ('node_modules/' === pkg.substr(0, 13)) {
-                        pkg = pkg.substr(13);
-                    }
-                    this.packages[pkg] = pkgInfo;
-                });
-            }
-        }
-        return this.packages;
-    }
-
-    /**
-     * Get package version.
-     *
-     * @param {string} pkg Package name
-     * @returns {string}
-     */
-    getVersion(pkg) {
-        const packages = this.getPackages();
-        if (packages[pkg] && packages[pkg].version) {
-            return packages[pkg].version;
-        }
+        this.pkg = new Package();
     }
 
     /**
@@ -138,7 +97,7 @@ class App {
             let done = false;
             const d = () => {
                 let buff, err, code;
-                const parsedUrl = require('url').parse(url);
+                const parsedUrl = new URL(url);
                 const http = require('https:' == parsedUrl.protocol ? 'https' : 'http');
                 const req = http.get(url, res => {
                     code = res.statusCode;
@@ -221,11 +180,11 @@ class App {
                 for (const mdata of items) {
                     const pkgs = mdata.name ? (Array.isArray(mdata.name)  ? mdata.name : [mdata.name]) : [asset];
                     for (const pkg of pkgs) {
-                        let version = this.getVersion(pkg);
+                        let version = this.pkg.getVersion(pkg);
                         if (version) {
                             console.log(`+ ${asset}: ${version}`);
                             try {
-                                const moduleDir = path.join(__dirname, 'node_modules', pkg);
+                                const moduleDir = path.join(this.pkg.dir, 'node_modules', pkg);
                                 const destDir = path.join(dir, mdata.dest ? mdata.dest : asset);
                                 let pkgDir = moduleDir;
                                 // sources {"src": "dest"}
@@ -240,14 +199,14 @@ class App {
                                 }
                                 // download if needed
                                 if (mdata.cdn) {
-                                    if (!this.package.cdn[mdata.cdn]) {
+                                    if (!this.pkg.cdn[mdata.cdn]) {
                                         console.log(`  cdn not defined ${mdata.cdn}!`);
                                         continue;
                                     }
                                     pkgDir = path.join(__dirname, '.files');
                                     this.prepDir(pkgDir);
                                     for (const src in sources) {
-                                        const url = this.package.cdn[mdata.cdn]
+                                        const url = this.pkg.cdn[mdata.cdn]
                                             .replace(/<PKG>/g, pkg)
                                             .replace(/<VER>/g, version)
                                             .replace(/<NAME>/g, src);
@@ -329,7 +288,7 @@ class App {
      */
     async run(args, options = {}) {
         const dest = args.shift();
-        if (fs.existsSync(dest) && this.package.assets) {
+        if (fs.existsSync(dest) && this.pkg.assets) {
             // load CDN if exist
             let oldCdn;
             const cdnFile = path.join(dest, 'cdn.json');
@@ -338,7 +297,7 @@ class App {
                 this.cdn = JSON.parse(oldCdn);
                 console.log(`+ ${path.basename(cdnFile)} loaded`);
             }
-            await this.updateAsset(this.package.assets, dest, Object.assign({}, options, {updates: args}));
+            await this.updateAsset(this.pkg.assets, dest, Object.assign({}, options, {updates: args}));
             // save CDN
             if (oldCdn) {
                 const cdn = {};
