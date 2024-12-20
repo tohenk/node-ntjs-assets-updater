@@ -323,33 +323,38 @@ function usage() {
 
 Options:
   -v, --verbose    Be verbose
-`);
+`
+    );
 }
 
-if (process.argv.length > 2) {
-    const options = {};
-    const args = process.argv.slice(2);
-    while (true) {
-        if (!args.length) {
-            break;
-        }
-        if (args[0].startsWith('-') || args[0].startsWith('--')) {
-            let arg = args.shift();
-            arg = arg.substr(arg.startsWith('--') ? 2 : 1);
-            if (arg.indexOf('=') > 0) {
-                options[arg.substr(0, arg.indexOf('='))] = arg.substr(arg.indexOf('=') + 1);
-            } else {
-                options[arg] = true;
+if (require.main === module) {
+    if (process.argv.length > 2) {
+        const options = {};
+        const args = process.argv.slice(2);
+        while (true) {
+            if (!args.length) {
+                break;
             }
-        } else {
-            break;
+            if (args[0].startsWith('-') || args[0].startsWith('--')) {
+                let arg = args.shift();
+                arg = arg.substr(arg.startsWith('--') ? 2 : 1);
+                if (arg.indexOf('=') > 0) {
+                    options[arg.substr(0, arg.indexOf('='))] = arg.substr(arg.indexOf('=') + 1);
+                } else {
+                    options[arg] = true;
+                }
+            } else {
+                break;
+            }
         }
-    }
-    if (args.length) {
-        new App().run(args, options);
+        if (args.length) {
+            new App().run(args, options);
+        } else {
+            usage();
+        }
     } else {
         usage();
     }
 } else {
-    usage();
+    module.exports = App;
 }

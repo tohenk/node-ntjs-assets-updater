@@ -29,7 +29,10 @@ if (process.argv.length > 2) {
     // get asset information
     let pkgname = args[0];
     let info = pkg.assets[pkgname];
-    if (typeof info === 'object' && Object.keys(info).length > 0 && info.name === undefined) {
+    if (typeof info === 'object' &&
+        Object.keys(info).length > 0 &&
+        info.name === undefined &&
+        info.packages) {
         info = undefined;
     }
     if (!info) {

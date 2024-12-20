@@ -4,7 +4,7 @@
   "description": "NTJS web assets updater",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "author": "Toha <tohenk@yahoo.com>",
   "license": "MIT",
