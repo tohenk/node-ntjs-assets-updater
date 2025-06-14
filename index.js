@@ -181,8 +181,8 @@ class App {
                     const pkgs = mdata.name ? (Array.isArray(mdata.name)  ? mdata.name : [mdata.name]) : [asset];
                     for (const pkg of pkgs) {
                         let version = this.pkg.getVersion(pkg);
-                        if (version) {
-                            console.log(`+ ${asset}: ${version}`);
+                        if (version || mdata.cdn) {
+                            console.log(`+ ${asset}: ${version ? version : mdata.cdn}`);
                             try {
                                 const moduleDir = path.join(this.pkg.dir, 'node_modules', pkg);
                                 const destDir = path.join(dir, mdata.dest ? mdata.dest : asset);
