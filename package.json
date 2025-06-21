@@ -99,6 +99,7 @@
     "typeahead.js": "^0.11.1"
   },
   "cdn": {
+    "cdnjs": "https://cdnjs.cloudflare.com/ajax/libs/<PKG>/<VER>/<NAME>",
     "jsdelivr": "https://cdn.jsdelivr.net/npm/<PKG>@<VER>/<NAME>",
     "metadata-github": "https://github.com/thomasdideriksen/metadata/raw/refs/heads/master/metadata.js",
     "pdfjs-github-release": "https://github.com/mozilla/pdf.js/releases/download/v<VER>/pdfjs-<VER>-dist.zip",
@@ -362,7 +363,7 @@
       }
     },
     "exif-js": {
-      "cdn": "jsdelivr",
+      "cdn": "cdnjs",
       "source": [
         "exif.js",
         "exif.min.js"
