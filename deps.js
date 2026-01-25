@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2023-2025 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2023-2026 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -31,7 +31,11 @@ if (fs.existsSync(package)) {
     if (packageInfo.dependencies) {
         const pkgs = [];
         for (const pkg of Object.keys(packageInfo.dependencies)) {
-            pkgs.push(`${pkg}@latest`);
+            let channel = 'latest';
+            if (packageInfo.assets && packageInfo.assets[pkg] !== undefined && packageInfo.assets[pkg].channel) {
+                channel = packageInfo.assets[pkg].channel;
+            }
+            pkgs.push(`${pkg}@${channel}`);
         }
         const lines = [];
         const ext = process.platform === 'win32' ? 'cmd' : 'sh';
