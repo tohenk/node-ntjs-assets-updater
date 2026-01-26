@@ -21,7 +21,6 @@
     "bootstrap": "^5.3.8",
     "bootstrap-3-typeahead": "^4.0.2",
     "bootstrap-icons": "^1.13.1",
-    "bootstrap-select-main": "^1.14.0-main",
     "bootstrap-star-rating": "^4.1.2",
     "bootswatch": "^5.3.8",
     "ckeditor5": "^47.4.0",
@@ -78,8 +77,9 @@
     "highcharts": "^12.5.0",
     "interactjs": "^1.10.27",
     "jqGrid": "^5.8.10",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "jquery-hotkeys": "^0.2.2",
+    "jquery-migrate": "^4.0.2",
     "jquery-numberformatter": "^1.2.4",
     "jquery.spinner": "^0.2.1",
     "js-cookie": "^3.0.5",
@@ -430,9 +430,7 @@
         "plugins"
       ]
     },
-    "jquery": {
-      "channel": "3"
-    },
+    "jquery": {},
     "jQuery-File-Upload": {
       "name": "blueimp-file-upload",
       "source": [
@@ -442,6 +440,7 @@
         "js"
       ]
     },
+    "jquery-migrate": {},
     "jquery-numberformatter": {
       "source": {
         "src": ""
