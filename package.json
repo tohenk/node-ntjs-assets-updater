@@ -472,16 +472,28 @@
     },
     "pdfjs": {
       "name": "pdfjs-dist",
-      "cdn": "pdfjs-github-release",
       "source": [
         "."
       ]
     },
-    "pdfjs-legacy": {
+    "pdfjs-viewer": {
+      "name": "pdfjs-dist",
+      "cdn": "pdfjs-github-release",
+      "source": {
+        "web": ""
+      },
+      "ignores": [
+        "*.pdf"
+      ]
+    },
+    "pdfjs-legacy-viewer": {
       "name": "pdfjs-dist",
       "cdn": "pdfjs-legacy-github-release",
-      "source": [
-        "."
+      "source": {
+        "web": ""
+      },
+      "ignores": [
+        "*.pdf"
       ]
     },
     "popper.js": {
