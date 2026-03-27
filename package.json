@@ -23,7 +23,7 @@
     "bootstrap-icons": "^1.13.1",
     "bootstrap-star-rating": "^4.1.2",
     "bootswatch": "^5.3.8",
-    "ckeditor5": "^47.5.0",
+    "ckeditor5": "^47.6.1",
     "cropperjs": "^2.1.0",
     "datatables.net": "^2.3.7",
     "datatables.net-autofill": "^2.7.1",
@@ -76,7 +76,7 @@
     "fomantic-ui": "^2.9.4",
     "highcharts": "^12.5.0",
     "interactjs": "^1.10.27",
-    "jqGrid": "^5.8.11",
+    "jqGrid": "^5.9.0",
     "jquery": "^4.0.0",
     "jquery-hotkeys": "^0.2.2",
     "jquery-migrate": "^4.0.2",
@@ -90,12 +90,12 @@
     "moment": "^2.30.1",
     "mousetrap": "^1.6.5",
     "numeral": "^2.0.6",
-    "pdfjs-dist": "^5.4.624",
+    "pdfjs-dist": "^5.5.207",
     "sceditor": "^3.2.1",
     "socket.io-client": "^4.8.3",
     "strophe.js": "^4.0.0-rc0",
     "tinymce": "^8.3.2",
-    "tinymce-i18n": "^26.2.16",
+    "tinymce-i18n": "^26.3.23",
     "typeahead.js": "^0.11.1"
   },
   "cdn": {
@@ -112,6 +112,40 @@
       "source": [
         "bignumber.js",
         "bignumber.min.js"
+      ]
+    },
+    "blueimp-canvas-to-blob": {
+      "source": [
+        "LICENSE.txt",
+        "js"
+      ]
+    },
+    "blueimp-file-upload": {
+      "source": [
+        "LICENSE.txt",
+        "css",
+        "img",
+        "js"
+      ]
+    },
+    "blueimp-gallery": {
+      "source": [
+        "LICENSE.txt",
+        "css",
+        "img",
+        "js"
+      ]
+    },
+    "blueimp-load-image": {
+      "source": [
+        "LICENSE.txt",
+        "js"
+      ]
+    },
+    "blueimp-tmpl": {
+      "source": [
+        "LICENSE.txt",
+        "js"
       ]
     },
     "bootstrap": {},
@@ -158,13 +192,13 @@
     "cropper": {
       "name": "cropperjs"
     },
-    "DataTables": {
+    "datatables": {
       "ignores": [
         "*.mjs",
         "*.ts"
       ],
       "packages": {
-        "DataTables": {
+        "datatables": {
           "name": [
             "datatables.net",
             "datatables.net-dt",
@@ -176,45 +210,45 @@
             "js"
           ]
         },
-        "DataTables-AutoFill": {
+        "datatables-autofill": {
           "name": [
             "datatables.net-autofill",
             "datatables.net-autofill-dt",
             "datatables.net-autofill-bs5"
           ],
-          "dest": "Extensions/AutoFill",
+          "dest": "extensions/autofill",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-Buttons": {
+        "datatables-buttons": {
           "name": [
             "datatables.net-buttons",
             "datatables.net-buttons-dt",
             "datatables.net-buttons-bs5"
           ],
-          "dest": "Extensions/Buttons",
+          "dest": "extensions/buttons",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-ColReorder": {
+        "datatables-colreorder": {
           "name": [
             "datatables.net-colreorder",
             "datatables.net-colreorder-dt",
             "datatables.net-colreorder-bs5"
           ],
-          "dest": "Extensions/ColReorder",
+          "dest": "extensions/colreorder",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-DateTime": {
+        "datatables-datetime": {
           "name": "datatables.net-datetime",
-          "dest": "Extensions/DateTime",
+          "dest": "extensions/datetime",
           "source": {
             "dist/dataTables.dateTime.css": "css/dataTables.dateTime.css",
             "dist/dataTables.dateTime.min.css": "css/dataTables.dateTime.min.css",
@@ -222,141 +256,141 @@
             "dist/dataTables.dateTime.min.js": "js/dataTables.dateTime.min.js"
           }
         },
-        "DataTables-FixedColumns": {
+        "datatables-fixedcolumns": {
           "name": [
             "datatables.net-fixedcolumns",
             "datatables.net-fixedcolumns-dt",
             "datatables.net-fixedcolumns-bs5"
           ],
-          "dest": "Extensions/FixedColumns",
+          "dest": "extensions/fixedcolumns",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-FixedHeader": {
+        "datatables-fixedheader": {
           "name": [
             "datatables.net-fixedheader",
             "datatables.net-fixedheader-dt",
             "datatables.net-fixedheader-bs5"
           ],
-          "dest": "Extensions/FixedHeader",
+          "dest": "extensions/fixedheader",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-KeyTable": {
+        "datatables-keytable": {
           "name": [
             "datatables.net-keytable",
             "datatables.net-keytable-dt",
             "datatables.net-keytable-bs5"
           ],
-          "dest": "Extensions/KeyTable",
+          "dest": "extensions/keytable",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-Responsive": {
+        "datatables-responsive": {
           "name": [
             "datatables.net-responsive",
             "datatables.net-responsive-dt",
             "datatables.net-responsive-bs5"
           ],
-          "dest": "Extensions/Responsive",
+          "dest": "extensions/responsive",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-RowGroup": {
+        "datatables-rowgroup": {
           "name": [
             "datatables.net-rowgroup",
             "datatables.net-rowgroup-dt",
             "datatables.net-rowgroup-bs5"
           ],
-          "dest": "Extensions/RowGroup",
+          "dest": "extensions/rowgroup",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-RowReorder": {
+        "datatables-rowreorder": {
           "name": [
             "datatables.net-rowreorder",
             "datatables.net-rowreorder-dt",
             "datatables.net-rowreorder-bs5"
           ],
-          "dest": "Extensions/RowReorder",
+          "dest": "extensions/rowreorder",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-Scroller": {
+        "datatables-scroller": {
           "name": [
             "datatables.net-scroller",
             "datatables.net-scroller-dt",
             "datatables.net-scroller-bs5"
           ],
-          "dest": "Extensions/Scroller",
+          "dest": "extensions/scroller",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-SearchBuilder": {
+        "datatables-searchbuilder": {
           "name": [
             "datatables.net-searchbuilder",
             "datatables.net-searchbuilder-dt",
             "datatables.net-searchbuilder-bs5"
           ],
-          "dest": "Extensions/SearchBuilder",
+          "dest": "extensions/searchbuilder",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-SearchPanes": {
+        "datatables-searchpanes": {
           "name": [
             "datatables.net-searchpanes",
             "datatables.net-searchpanes-dt",
             "datatables.net-searchpanes-bs5"
           ],
-          "dest": "Extensions/SearchPanes",
+          "dest": "extensions/searchpanes",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-Select": {
+        "datatables-select": {
           "name": [
             "datatables.net-select",
             "datatables.net-select-dt",
             "datatables.net-select-bs5"
           ],
-          "dest": "Extensions/Select",
+          "dest": "extensions/select",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-StateRestore": {
+        "datatables-staterestore": {
           "name": [
             "datatables.net-staterestore",
             "datatables.net-staterestore-dt",
             "datatables.net-staterestore-bs5"
           ],
-          "dest": "Extensions/StateRestore",
+          "dest": "extensions/staterestore",
           "source": [
             "css",
             "js"
           ]
         },
-        "DataTables-I18N": {
+        "datatables-i18n": {
           "name": "datatables.net-plugins",
-          "dest": "Plugins/i18n",
+          "dest": "plugins/i18n",
           "source": {
             "i18n": ""
           }
@@ -374,15 +408,6 @@
       "name": "@fortawesome/fontawesome-free",
       "source": [
         "."
-      ]
-    },
-    "Gallery": {
-      "name": "blueimp-gallery",
-      "source": [
-        "LICENSE.txt",
-        "css",
-        "img",
-        "js"
       ]
     },
     "google-fonts": {},
@@ -403,28 +428,8 @@
     "interact": {
       "name": "interactjs"
     },
-    "JavaScript-Canvas-to-Blob": {
-      "name": "blueimp-canvas-to-blob",
-      "source": [
-        "LICENSE.txt",
-        "js"
-      ]
-    },
-    "JavaScript-Load-Image": {
-      "name": "blueimp-load-image",
-      "source": [
-        "LICENSE.txt",
-        "js"
-      ]
-    },
-    "JavaScript-Templates": {
-      "name": "blueimp-tmpl",
-      "source": [
-        "LICENSE.txt",
-        "js"
-      ]
-    },
-    "jqGrid": {
+    "jqgrid": {
+      "name": "jqGrid",
       "source": [
         "css",
         "js",
@@ -432,15 +437,6 @@
       ]
     },
     "jquery": {},
-    "jQuery-File-Upload": {
-      "name": "blueimp-file-upload",
-      "source": [
-        "LICENSE.txt",
-        "css",
-        "img",
-        "js"
-      ]
-    },
     "jquery-migrate": {},
     "jquery-numberformatter": {
       "source": {
